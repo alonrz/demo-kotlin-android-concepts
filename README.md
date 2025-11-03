@@ -16,121 +16,17 @@ This app uses:
 
 ```
 app/src/main/java/com/rz/democoncurrency/
-├── MainActivity.kt                 # Main activity with navigation setup
+├── MainActivity.kt                  # Main activity with navigation setup
 ├── navigation/
-│   ├── Screen.kt                  # Sealed class defining all screens
-│   └── NavGraph.kt                # Navigation graph configuration
+│   ├── Screen.kt                   # Sealed class defining all screens
+│   └── NavGraph.kt                 # Navigation graph configuration
 ├── screens/
-│   ├── MenuScreen.kt              # Main menu screen
-│   ├── ParallelTimers.kt          # Parallel timers demo screen
-│   └── ParallelTimersViewModel.kt # ViewModel for parallel timers
-└── ui/theme/                       # App theme configuration
-```
-
-## How to Add a New Screen
-
-### 1. Create the Screen Definition
-
-In `navigation/Screen.kt`, add a new data object:
-
-```kotlin
-data object YourNewScreen : Screen(
-    "your_route",
-    "Your Screen Title",
-    "Description of your screen"
-)
-```
-
-### 2. Create the ViewModel
-
-Create `screens/YourScreenViewModel.kt`:
-
-```kotlin
-package com.rz.democoncurrency.screens
-
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-
-class YourScreenViewModel : ViewModel() {
-    // Define your state
-    private val _state = MutableStateFlow(YourState())
-    val state: StateFlow<YourState> = _state.asStateFlow()
-    
-    // Define your actions
-    fun onAction() {
-        // Update state
-    }
-    
-    override fun onCleared() {
-        super.onCleared()
-        // Clean up resources
-    }
-}
-
-data class YourState(
-    val data: String = ""
-)
-```
-
-### 3. Create the Screen Composable
-
-Create `screens/YourScreen.kt`:
-
-```kotlin
-package com.rz.democoncurrency.screens
-
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
-
-@Composable
-fun YourScreen(
-    modifier: Modifier = Modifier.fillMaxSize(),
-    viewModel: YourScreenViewModel = viewModel()
-) {
-    val state by viewModel.state.collectAsState()
-    
-    // Your UI implementation
-}
-```
-
-### 4. Add to Navigation Graph
-
-In `navigation/NavGraph.kt`, add your screen to the NavHost:
-
-```kotlin
-composable(route = Screen.YourNewScreen.route) {
-    YourScreen()
-}
-```
-
-### 5. Add to Menu
-
-In `screens/MenuScreen.kt`, add your screen to the menu items list:
-
-```kotlin
-val menuItems = listOf(
-    Screen.ParallelTimers,
-    Screen.YourNewScreen  // Add here
-)
-```
-
-### 6. Update MainActivity
-
-In `MainActivity.kt`, add the screen mapping in the `when` expression:
-
-```kotlin
-val currentScreen = when (currentRoute) {
-    Screen.Menu.route -> Screen.Menu
-    Screen.ParallelTimers.route -> Screen.ParallelTimers
-    Screen.YourNewScreen.route -> Screen.YourNewScreen  // Add here
-    else -> Screen.Menu
-}
+│   ├── MenuScreen.kt               # Main menu screen
+│   ├── Concurrency.kt              # Concurrency demo screen
+│   ├── ConcurrencyViewModel.kt     # ViewModel for concurrency demo
+│   ├── ParallelTimers.kt           # Parallel timers demo screen
+│   └── ParallelTimersViewModel.kt  # ViewModel for parallel timers
+└── ui/theme/                        # App theme configuration
 ```
 
 ## Features
@@ -143,7 +39,12 @@ val currentScreen = when (currentRoute) {
 
 ## Current Demos
 
-1. **Parallel Timers** - Demonstration of parallel timer execution
+1. **Parallel Timers** - Demonstration of parallel timer execution using Kotlin coroutines
+2. **Concurrency** - Demonstration of concurrency patterns including:
+    - Sequential execution vs concurrent execution
+    - Coroutine cancellation
+    - Exception handling with supervisorScope
+    - Async/await for parallel operations
 
 ## Building and Running
 
