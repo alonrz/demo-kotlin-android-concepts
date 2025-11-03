@@ -4,10 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +48,12 @@ fun ConcurrencyScreenRoot(
         onConcurrencyWithAsync = {
             viewModel.onConcurrencyWithAsync()
         },
+        onCounterWithoutMutex = {
+            viewModel.onUseMutex(false)
+        },
+        onCounterWithMutex = {
+            viewModel.onUseMutex(true)
+        }
     )
 }
 
@@ -56,6 +65,8 @@ private fun ConcurrencyScreen(
     onConcurrencyWithCancellationClick: () -> Unit,
     onConcurrencyWithExceptionClick: () -> Unit,
     onConcurrencyWithAsync: () -> Unit,
+    onCounterWithoutMutex: () -> Unit,
+    onCounterWithMutex: () -> Unit,
     logs: List<String> = listOf("asd", "dfg")
 ) {
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -73,6 +84,15 @@ private fun ConcurrencyScreen(
         }
         Button(onClick = onConcurrencyWithAsync) {
             Text(text = "Concurrency with async")
+        }
+        Row {
+            Button(onClick = onCounterWithoutMutex) {
+                Text(text = "Counter no Mutex")
+            }
+            Spacer(Modifier.width(8.dp))
+            Button(onClick = onCounterWithMutex) {
+                Text(text = "Counter with Mutex")
+            }
         }
 
         Box(

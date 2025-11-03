@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -50,7 +49,7 @@ fun MainContent() {
     val currentScreen = when (currentRoute) {
         Screen.Menu.route -> Screen.Menu
         Screen.ParallelTimers.route -> Screen.ParallelTimers
-        // Add more screen mappings here as you create them
+        Screen.Concurrency.route -> Screen.Concurrency
         else -> Screen.Menu
     }
 

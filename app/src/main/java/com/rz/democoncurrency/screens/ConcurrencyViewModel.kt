@@ -1,15 +1,12 @@
 package com.rz.democoncurrency.screens
 
-import android.os.AsyncTask.execute
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.random.Random
 
 class ConcurrencyViewModel : ViewModel() {
@@ -87,13 +86,13 @@ class ConcurrencyViewModel : ViewModel() {
 
         viewModelScope.launch {
             supervisorScope {
-                launch() {
+                launch(orderException) {
                     Factory.orderBricks()
                 }
-                launch() {
+                launch(orderException) {
                     Factory.orderDoors(true)
                 }
-                launch() {
+                launch(orderException) {
                     Factory.orderWindows()
                 }
             }
@@ -129,6 +128,30 @@ class ConcurrencyViewModel : ViewModel() {
                 else
                     _logs.update { it + "One of the operations failed!" }
             }
+        }
+    }
+
+    fun onUseMutex(useMutex:Boolean) {
+        _logs.update { emptyList() }
+        var counter = 0
+        val mutex = Mutex()
+        viewModelScope.launch(Dispatchers.Default) {
+            val jobs = List(100) {
+                launch {
+                    repeat(100) {
+                        if(useMutex) {
+                            mutex.withLock {
+                                counter++
+                            }
+                        } else {
+                            counter++
+                        }
+                    }
+                }
+            }
+
+            jobs.forEach { it.join() }
+            _logs.update { it + "Counter: $counter" }
         }
     }
 }

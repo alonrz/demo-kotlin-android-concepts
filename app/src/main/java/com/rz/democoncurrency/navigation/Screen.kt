@@ -10,6 +10,6 @@ sealed class Screen(val route: String, val title: String, val description: Strin
     data object Concurrency : Screen(
         "concurrency",
         "Concurrency",
-        "Demostration of concurrency"
+        "Demonstration of concurrency"
     )
 }
